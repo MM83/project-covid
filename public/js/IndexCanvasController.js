@@ -87,7 +87,7 @@ function IndexCanvasController(stage)
   }, 100);
 
 
-  var text = new createjs.Text("PROJECT COVID", "50px Helvetica, Arial", "#fff");
+  var text = new createjs.Text("PROJECT COVID", "50px Work Sans, Helvetica, Arial", "#fff");
   text.textBaseline = "alphabetic";
   let bounds = text.getBounds()
   text.x = window.innerWidth / 2 - bounds.width / 2;
