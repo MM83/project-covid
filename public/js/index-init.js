@@ -7,12 +7,13 @@
   }
 
   let bgCanvas = qs("#bg-canvas");
+  let bgCanvas2 = qs("#bg-canvas-2");
   let w, h, running = true;
 
   function resize()
   {
-    w = bgCanvas.width  = window.innerWidth;
-    h = bgCanvas.height = window.innerHeight;
+    w = bgCanvas.width  = bgCanvas2.width  = window.innerWidth;
+    h = bgCanvas.height = bgCanvas2.height = window.innerHeight;
   }
 
   window.addEventListener("resize", resize);

@@ -2,7 +2,7 @@ function IndexCanvasController(stage)
 {
 
   const NUM_VIRUS_PARTS = 20,
-        NUM_VIRUS_LEGS = 8,
+        NUM_VIRUS_LEGS = 10,
         NUM_CELL_PARTS = 20,
         VIRUS_RADIUS_DIVISOR = 120,
         LEG_VEL_FRIC = 1.0009,
@@ -63,29 +63,57 @@ function IndexCanvasController(stage)
       virus.addChild(legEnd);
       VIRUSES.push(virus);
     }
-
-
-
   }
 
-  // for(let i = 0; i < 30; ++i)
-  // {
-  //   createVirus(Math.random() * window.innerWidth, Math.random() * window.innerHeight);
-  // }
+
+
+let seriously = new Seriously();
+let source = seriously.source('#bg-canvas');
+let target = seriously.target('#bg-canvas-2');
+let noise = seriously.effect('tvglitch');
+// noise.distortion = 0.0;
+// noise.amount = 10;
+console.log("nOISE", noise);
+
+// connect all our nodes in the right order
+noise.source = source;
+target.source = noise;
+// seriously.go();
+
 
   setInterval(()=>{
-    createVirus(Math.random() * window.innerWidth, Math.random() * window.innerHeight);
+    // createVirus(Math.random() * window.innerWidth, Math.random() * window.innerHeight);
+    createVirus(window.innerWidth / 2, window.innerHeight / 2);
   }, 100);
 
-  // createVirus(window.innerWidth / 2, window.innerHeight / 2);
+
+
+
 
   this.update = ()=>
   {
 
+    if(Math.random() < 0.2)
+    {
+      noise.distortion = Math.random() * 0.01;
+      noise.verticalSync =  Math.random();
+      noise.lineSync = 0;
+      noise.scanlines = Math.random();
+      // noise.barsRate = Math.random() * 80;
+    }
+    if(Math.random() < 0.025)
+    {
+      noise.distortion = Math.random() * 0.3;
+      noise.lineSync = Math.random() * 0.2;
+    }
+
+
+    noise.amount = Math.random();
+
       let r = Math.min(window.innerWidth, window.innerHeight) / VIRUS_RADIUS_DIVISOR;
 
 
-      for(let i = 0; i < VIRUSES.length; ++i)
+      outer: for(let i = 0; i < VIRUSES.length; ++i)
       {
         let virus = VIRUSES[i];
 
@@ -97,6 +125,8 @@ function IndexCanvasController(stage)
         virus.x += virus.velX;
         virus.y += virus.velY;
 
+
+
         if(!virus.alive)
         {
           if(scale > 0)
@@ -106,32 +136,20 @@ function IndexCanvasController(stage)
           } else {
             VIRUSES.splice(i, 1);
           }
-          continue;
+          continue outer;
         }
 
 
         let shape = virus.shape;
         let gfx = shape.graphics;
 
-        virus.scaleVel += (1 - scale) / 5000;
-        virus.scaleVel /= 1.02;
+        virus.scaleVel += (1 - scale) / 20000;
+        virus.scaleVel /= 1.002;
         scale += virus.scaleVel;
         virus.scaleX = virus.scaleY = scale;
 
         shape.graphics.clear();
         let legs = virus.legs;
-
-        let l = VIRUSES.length;
-        otherLoop : for(let j = 0; j < l; ++j)
-        {
-          if (i == j)
-            continue otherLoop;
-          let otherVirus = VIRUSES[j];
-          let xDist = virus.x - otherVirus.x;
-          let yDist = virus.y - otherVirus.y;
-          let dist = Math.hypot(xDist, yDist);
-          // let dist = Math.hypot(virus.x, virus.y, otherVirus.x, otherVirus.y);
-        }
 
         for(let j = 0; j < NUM_VIRUS_LEGS; ++j)
         {
@@ -144,6 +162,7 @@ function IndexCanvasController(stage)
           legEnd.velY /= legEnd.friction;
           legEnd.x += legEnd.velX;
           legEnd.y += legEnd.velY;
+          legEnd.scaleX = legEnd.scaleY = 0.5 + Math.hypot(legEnd.x, legEnd.y) / 20;
           legEnd.targX = legEnd.idealX + (Math.random() - 0.5) * r * 4;
           legEnd.targY = legEnd.idealY + (Math.random() - 0.5) * r * 4;
           legEnd.friction = LEG_VEL_FRIC + Math.random() * 0.01;
@@ -155,12 +174,14 @@ function IndexCanvasController(stage)
           gfx.endStroke();
 
         }
+
         shape.graphics.beginFill("red").drawCircle(0, 0, r);
-        shape.graphics.beginFill("black").drawCircle(0, 0, r * 0.8);
+        // shape.graphics.beginFill("black").drawCircle(0, 0, r * 0.8);
       }
 
-
       stage.update();
+      source.update();
+      seriously.render();
 
   }
 
