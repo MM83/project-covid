@@ -3,13 +3,13 @@ function IndexCanvasController(stage)
 
 
   const NUM_VIRUS_PARTS = 20,
-        NUM_VIRUS_LEGS = 10,
+        NUM_VIRUS_LEGS = 6,
         NUM_CELL_PARTS = 20,
         VIRUS_RADIUS_DIVISOR = 120,
-        LEG_VEL_FRIC = 1.002,
+        LEG_VEL_FRIC = 1.0003,
         LEG_VEL_DIV = 17500,
         LEG_MAX_VEL = 0.2,
-        VIRUS_LIFE_MIN = 1000,
+        VIRUS_LIFE_MIN = 500,
         VIRUS_LIFE_RANGE = 500,
         CELLS = [],
         VIRUSES = [];
@@ -27,6 +27,8 @@ function IndexCanvasController(stage)
   noise.source = edge;
   target.source = noise;
 
+  // console.log("fg", filmgrain);
+
   function createVirus(x , y)
   {
 
@@ -35,7 +37,7 @@ function IndexCanvasController(stage)
 
     virus.scaleX = virus.scaleY = 0;
     virus.scaleVel = 0;
-    virus.life = VIRUS_LIFE_MIN + VIRUS_LIFE_RANGE * Math.random();
+    virus.startLife = virus.life = VIRUS_LIFE_MIN + VIRUS_LIFE_RANGE * Math.random();
     virus.alive = true;
 
     virus.legs = [];
@@ -80,12 +82,6 @@ function IndexCanvasController(stage)
     return virus;
   }
 
-
-
-
-// seriously.go();
-
-
   setInterval(()=>{
     createVirus(window.innerWidth / 2, window.innerHeight / 2);
   }, 100);
@@ -95,7 +91,7 @@ function IndexCanvasController(stage)
   text.textBaseline = "alphabetic";
   let bounds = text.getBounds()
   text.x = window.innerWidth / 2 - bounds.width / 2;
-  text.y = window.innerHeight / 2 - bounds.height / 2;
+  text.y = window.innerHeight / 2;
 
   this.update = ()=>
   {
@@ -115,7 +111,6 @@ function IndexCanvasController(stage)
       noise.distortion = Math.random() * 0.01;
       noise.verticalSync =  Math.random();
       blur.amount = Math.random() * 0.03;
-      text.alpha = Math.random();
       noise.scanlines =  Math.random() * 200;
 
     }
@@ -151,6 +146,8 @@ function IndexCanvasController(stage)
       let virus = VIRUSES[i];
 
       virus.alive = --virus.life > 0;
+
+      virus.alpha = virus.life / virus.startLife;
 
       let scale = virus.scaleX;
 
@@ -191,13 +188,8 @@ function IndexCanvasController(stage)
 
       if(!virus.alive)
       {
-        if(scale > 0)
-        {
-          scale -= 0.002;
-          virus.scaleX = virus.scaleY = virus.alpha = scale;
-        } else {
-          VIRUSES.splice(i, 1);
-        }
+
+        VIRUSES.splice(i, 1);
         continue outer;
       }
 
