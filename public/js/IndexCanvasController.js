@@ -7,9 +7,9 @@ function IndexCanvasController(stage)
         NUM_CELL_PARTS = 20,
         VIRUS_RADIUS_DIVISOR = 120,
         LEG_VEL_FRIC = 1.002,
-        LEG_VEL_DIV = 3500,
+        LEG_VEL_DIV = 17500,
         LEG_MAX_VEL = 0.2,
-        VIRUS_LIFE_MIN = 500,
+        VIRUS_LIFE_MIN = 1000,
         VIRUS_LIFE_RANGE = 500,
         CELLS = [],
         VIRUSES = [];
