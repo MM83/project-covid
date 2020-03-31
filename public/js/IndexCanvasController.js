@@ -175,7 +175,7 @@ mixer.connect(audioCtx.destination);
 
   function randomiseFilter(turnUp = true)
   {
-    gainNode.gain.value = turnUp ? 0.5 : 0.1;
+    gainNode.gain.value = turnUp ? 0.5 : gainNode.gain.value ;
     // filter.frequency.value = Math.random() * 4000;
 
     filter.frequency.linearRampToValueAtTime(Math.random() * 4000, audioCtx.currentTime + Math.random());
@@ -188,12 +188,12 @@ mixer.connect(audioCtx.destination);
     if(Math.random() < 0.5){
       oscillator.type = wTypes[Math.floor(Math.random() * wTypes.length)];
       oscillator.frequency.linearRampToValueAtTime(Math.random() * 40, audioCtx.currentTime);
-      oscillator.frequency.linearRampToValueAtTime(Math.random() * 40, audioCtx.currentTime + Math.random());
+      oscillator.frequency.linearRampToValueAtTime(Math.random() * 400, audioCtx.currentTime + Math.random());
     }
     if(Math.random() < 0.5){
     oscillator2.type = wTypes[Math.floor(Math.random() * wTypes.length)];
-    oscillator2.frequency.linearRampToValueAtTime(Math.random() * 200, audioCtx.currentTime);
-    oscillator2.frequency.linearRampToValueAtTime(Math.random() * 200, audioCtx.currentTime + Math.random());
+    oscillator2.frequency.linearRampToValueAtTime(Math.random() * 400, audioCtx.currentTime);
+    oscillator2.frequency.linearRampToValueAtTime(Math.random() * 40, audioCtx.currentTime + Math.random());
     }
   }
 
@@ -216,14 +216,14 @@ mixer.connect(audioCtx.destination);
         noise.distortion = Math.random() * 2;
       }
       if(Math.random() < 0.02){
-        randomiseFilter(false);
+        // randomiseFilter(false);
         noise.verticalSync = Math.random() * 100;
       }
       else
         noise.verticalSync = 0;
 
       if(Math.random() < 0.02){
-        randomiseFilter();
+        // randomiseFilter();
         noise.distortion = Math.random() * 2;
         blur.amount = Math.random() * 0.05;
       }
@@ -267,15 +267,18 @@ mixer.connect(audioCtx.destination);
       }
 
   } else {
-    if(Math.random() < 0.4){
-      gainNode.gain.value = 0;
-    }
+
     filter.frequency.value = Math.random() * 4000;
     if(Math.random() < 0.05){
       noise.distortion = Math.random() * 0.01;
       blur.amount = Math.random() * 0.01;
       noise.source = blur;
     }
+  }
+  if(Math.random() < 0.75){
+    gainNode.gain.value = 0;
+    oscillator.frequency.value = 4;
+    oscillator2.frequency.value = 5;
   }
 
 
