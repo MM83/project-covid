@@ -35,66 +35,21 @@ filter.type = 'lowshelf';
 
 let gainNode = audioCtx.createGain();
 let mixer = audioCtx.createChannelMerger();
-let delayMixer = audioCtx.createChannelMerger();
 
 let fTypes = ['highpass', 'bandpass', 'lowpass', 'peaking', 'notch', 'allpass', 'highshelf', 'lowshelf'];
 
 oscillator.connect(filter);
 filter.connect(distortion);
-distortion.connect(delayMixer);
-
-gainNode.connect(mixer);
+distortion.connect(gainNode);
 
 mixer.connect(audioCtx.destination);
 
-let delay1 = audioCtx.createDelay(10);
-delay1.connect(mixer);
-
-let delay2 = audioCtx.createDelay(10);
-delay2.connect(mixer);
-
-// gainNode.connect(delayMixer);
-
-delayMixer.connect(delay1);
-delayMixer.connect(delay2);
-// delayMixer.connect(gainNode);
-
 gainNode.connect(mixer);
-
-function playNote(step)
-{
-  let osc1 = audioCtx.createOscillator();
-  let gate1 = audioCtx.createGain();
-  osc1.frequency.value = 90;
-  osc1.type = 'triangle';
-  osc1.connect(gate1);
-  gate1.gain.value = 0.5;
-  gate1.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 3);
-  gate1.connect(delayMixer);
-
-  let osc2 = audioCtx.createOscillator();
-  let gate2 = audioCtx.createGain();
-  osc2.frequency.value = 45;
-  osc2.type = 'square';
-  osc2.connect(gate2);
-  gate2.gain.value = 0.0;
-  gate2.gain.linearRampToValueAtTime(0.25, audioCtx.currentTime + 1.5);
-  gate2.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 2);
-  gate2.connect(delayMixer);
-  osc1.start();
-  osc1.stop(audioCtx.currentTime + 3);
-  osc2.start();
-  osc2.stop(audioCtx.currentTime + 3);
-
-  // let split =
-
-}
 
 
 
   window.addEventListener("click", ()=>
   {
-    // playNote();
     if(audioStarted)
       return;
     audioStarted = true;
@@ -112,8 +67,8 @@ function playNote(step)
         LEG_VEL_FRIC = 1.0003,
         LEG_VEL_DIV = 17500,
         LEG_MAX_VEL = 0.2,
-        VIRUS_LIFE_MIN = 500,
-        VIRUS_LIFE_RANGE = 500,
+        VIRUS_LIFE_MIN = 1000,
+        VIRUS_LIFE_RANGE = 1500,
         CELLS = [],
         VIRUSES = [];
 
@@ -222,27 +177,25 @@ function playNote(step)
       filter.Q.value = 0.1;
       oscillator.type = 'sine';
       oscillator.frequency.setValueAtTime(7, audioCtx.currentTime); // value in hertz
-      // gainNode.value = 0.2;
+
     }
 
 
     if(Math.random() < 0.005)
     {
-      noise.distortion = Math.random() * 0.01;
-      noise.verticalSync =  Math.random();
+      noise.distortion = Math.random() * 0.02;
+      gainNode.value = 0.2;
+      noise.verticalSync =  Math.random() * 20;
       blur.amount = Math.random() * 0.03;
       noise.scanlines =  Math.random() * 200;
       oscillator.type = 'square';
-      // gainNode.gain.value = 0.2;
+      gainNode.gain.value = 0.2;
     }
     if(Math.random() < 0.001)
     {
       noise.lineSync = 0;
       blur.amount = Math.random() * 0.01;
       oscillator.type = 'square';
-      // gainNode.gain.value = 0.3;
-      delay1.delayTime = 0.6;
-      delay2.delayTime = 0.8;
     }
     if(Math.random() < 0.001)
     {
@@ -254,6 +207,10 @@ function playNote(step)
       // gainNode.gain.value = 0.5;
     }
 
+    if(Math.random() < 0.2)
+    {
+      gainNode.gain.value = 0;
+    }
 
 
 
@@ -268,10 +225,8 @@ function playNote(step)
       noise.verticalSync = Math.random() * 200;
       gainNode.gain.value = 0.5;
       distortion.curve = makeDistortionCurve(Math.random() * 600);
-      delay1.delayTime.value = Math.random() * 0.1;
-      delay2.delayTime.value = Math.random() * 0.1;
     }
-    if(Math.random() < 0.002)
+    if(Math.random() < 0.02)
     {
       noise.distortion = Math.random() * 0.3;
       filter.Q.value = Math.random() * 10;
@@ -283,7 +238,7 @@ function playNote(step)
     }
 
 
-    noise.amount = Math.random();
+    // noise.amount = Math.random();
 
     let r = Math.min(window.innerWidth, window.innerHeight) / VIRUS_RADIUS_DIVISOR;
 
