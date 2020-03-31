@@ -148,7 +148,7 @@ mixer.connect(audioCtx.destination);
 
   setInterval(()=>{
     createVirus(window.innerWidth / 2, window.innerHeight / 2);
-  }, 100);
+  }, 50);
 
 
   var text = new createjs.Text("PLANET COVID", "50px Work Sans, Helvetica, Arial", "#fff");
@@ -184,7 +184,7 @@ mixer.connect(audioCtx.destination);
   this.update = ()=>
   {
 
-    if(Math.random() < 0.25)
+    if(Math.random() < 0.15)
     {
 
 
@@ -196,18 +196,18 @@ mixer.connect(audioCtx.destination);
         noise.distortion = 0;
 
 
-      if(Math.random() < 0.01){
+      if(Math.random() < 0.005){
         randomiseFilter(false);
         noise.distortion = Math.random() * 2;
       }
-      if(Math.random() < 0.05){
+      if(Math.random() < 0.02){
         randomiseFilter(false);
         noise.verticalSync = Math.random() * 100;
       }
       else
         noise.verticalSync = 0;
 
-      if(Math.random() < 0.05){
+      if(Math.random() < 0.02){
         randomiseFilter();
         noise.distortion = Math.random() * 2;
         blur.amount = Math.random() * 0.05;
@@ -223,34 +223,40 @@ mixer.connect(audioCtx.destination);
       else
         noise.lineSync = 0;
 
-      if(Math.random() < 0.1){
+      if(Math.random() < 0.2){
         randomiseFilter();
         text.scaleX = text.scaleY = 1;
         noise.source = blur;
       }
 
-      if(Math.random() < 0.015){
+      if(Math.random() < 0.02){
         randomiseFilter();
         blur.amount = Math.random() * 0.2;
         noise.source = ascii;
+        text.scaleX = text.scaleY = Math.random() * 2;
         ascii.source = Math.random() < 0.5 ? blur : edge;
       }
 
 
 
-      if(Math.random() < 0.015){
+      if(Math.random() < 0.01){
         filter.Q.value = Math.random() * 10;
         distortion.curve = makeDistortionCurve(Math.random() * 600);
         filter.type = fTypes[Math.floor(Math.random())];
         noise.distortion = Math.random() * 5;
         blur.amount = Math.random() * 0.1;
-        text.scaleX = text.scaleY = Math.random() * 1.3;
+        text.scaleX = text.scaleY = Math.random() * 2;
         noise.source = edge;
       }
 
   } else {
-    if(Math.random() < 0.1){
+    if(Math.random() < 0.2){
       gainNode.gain.value = 0;
+    }
+    if(Math.random() < 0.05){
+      noise.distortion = Math.random() * 0.01;
+      blur.amount = Math.random() * 0.01;
+      noise.source = blur;
     }
   }
 
