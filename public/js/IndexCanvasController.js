@@ -151,14 +151,14 @@ mixer.connect(audioCtx.destination);
   }, 100);
 
 
-  var text = new createjs.Text("PROJECT COVID", "50px Work Sans, Helvetica, Arial", "#fff");
+  var text = new createjs.Text("PLANET COVID", "50px Work Sans, Helvetica, Arial", "#fff");
   text.textBaseline = "alphabetic";
   let bounds = text.getBounds();
   text.x = window.innerWidth / 2 - bounds.width / 2;
   text.y = window.innerHeight / 2;
 
 
-  var text2 = new createjs.Text("Hobbies of the Apocalypse", "30px Work Sans, Helvetica, Arial", "#fff");
+  var text2 = new createjs.Text("Projects of the Apocalypse", "25px Work Sans, Helvetica, Arial", "#fff");
   text2.textBaseline = "alphabetic";
   bounds = text2.getBounds();
   text2.x = window.innerWidth / 2 - bounds.width / 2;
@@ -169,12 +169,16 @@ mixer.connect(audioCtx.destination);
   function randomiseFilter(turnUp = true)
   {
     gainNode.gain.value = turnUp ? 0.5 : 0.1;
-    filter.frequency.value = Math.random() * 4000;
+    // filter.frequency.value = Math.random() * 4000;
+
+    filter.frequency.linearRampToValueAtTime(Math.random() * 4000, audioCtx.currentTime + Math.random());
     filter.Q.value = Math.random() * 10;
     distortion.curve = makeDistortionCurve(Math.random() * 1200);
     filter.type = fTypes[Math.floor(Math.random() * fTypes.length)];
     oscillator.type = wTypes[Math.floor(Math.random() * wTypes.length)];
-    oscillator.frequency.value = Math.random() * 30;
+    // oscillator.frequency.value = Math.random() * 40;
+    oscillator.frequency.linearRampToValueAtTime(Math.random() * 30, audioCtx.currentTime);
+    oscillator.frequency.linearRampToValueAtTime(Math.random() * 30, audioCtx.currentTime + Math.random() * 0.1);
   }
 
   this.update = ()=>
@@ -209,7 +213,7 @@ mixer.connect(audioCtx.destination);
         blur.amount = Math.random() * 0.05;
       }
 
-      if(Math.random() < 0.2)
+      if(Math.random() < 0.15)
         blur.amount = 0;
 
       if(Math.random() < 0.01)
@@ -225,7 +229,7 @@ mixer.connect(audioCtx.destination);
         noise.source = blur;
       }
 
-      if(Math.random() < 0.02){
+      if(Math.random() < 0.015){
         randomiseFilter();
         blur.amount = Math.random() * 0.2;
         noise.source = ascii;
@@ -234,7 +238,7 @@ mixer.connect(audioCtx.destination);
 
 
 
-      if(Math.random() < 0.01){
+      if(Math.random() < 0.015){
         filter.Q.value = Math.random() * 10;
         distortion.curve = makeDistortionCurve(Math.random() * 600);
         filter.type = fTypes[Math.floor(Math.random())];
