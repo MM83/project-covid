@@ -8,6 +8,7 @@ function IndexCanvasController(stage)
   oscillator.type = 'triangle';
   oscillator.frequency.setValueAtTime(50, audioCtx.currentTime); // value in hertz
   var distortion = audioCtx.createWaveShaper();
+  var oscillator2 = audioCtx.createOscillator();
 
   function makeDistortionCurve(amount) {
     var k = typeof amount === 'number' ? amount : 50,
@@ -28,17 +29,22 @@ distortion.oversample = '4x';
 
 let filter = audioCtx.createBiquadFilter();
 filter.frequency.value = 0;
+let filter2 = audioCtx.createBiquadFilter();
+filter2.frequency.value = 0;
 // filter.Q.value = 1000;
 
 let gainNode = audioCtx.createGain();
 let mixer = audioCtx.createChannelMerger();
 
-let fTypes = ['highpass', 'bandpass', 'lowpass', 'peaking', 'notch', 'allpass', 'highshelf', 'lowshelf'];
+let fTypes = ['highpass', 'bandpass', 'peaking', 'notch', 'allpass', 'highshelf'];
 
 let wTypes = ['sine', 'square', 'sawtooth', 'triangle'];
 
 oscillator.connect(filter);
-filter.connect(distortion);
+oscillator2.connect(filter2);
+filter.connect(mixer);
+filter2.connect(mixer);
+mixer.connect(distortion);
 distortion.connect(gainNode);
 gainNode.connect(mixer);
 mixer.connect(audioCtx.destination);
@@ -53,6 +59,7 @@ mixer.connect(audioCtx.destination);
     audioStarted = true;
     filter.frequency.linearRampToValueAtTime(40, audioCtx.currentTime + 5);
     oscillator.start();
+    oscillator2.start();
 
   });
 
@@ -173,12 +180,21 @@ mixer.connect(audioCtx.destination);
 
     filter.frequency.linearRampToValueAtTime(Math.random() * 4000, audioCtx.currentTime + Math.random());
     filter.Q.value = Math.random() * 10;
+    filter2.frequency.linearRampToValueAtTime(Math.random() * 4000, audioCtx.currentTime + Math.random());
+    filter2.Q.value = Math.random() * 10;
     distortion.curve = makeDistortionCurve(Math.random() * 1200);
     filter.type = fTypes[Math.floor(Math.random() * fTypes.length)];
-    oscillator.type = wTypes[Math.floor(Math.random() * wTypes.length)];
-    // oscillator.frequency.value = Math.random() * 40;
-    oscillator.frequency.linearRampToValueAtTime(Math.random() * 30, audioCtx.currentTime);
-    oscillator.frequency.linearRampToValueAtTime(Math.random() * 30, audioCtx.currentTime + Math.random() * 0.1);
+    filter2.type = fTypes[Math.floor(Math.random() * fTypes.length)];
+    if(Math.random() < 0.5){
+      oscillator.type = wTypes[Math.floor(Math.random() * wTypes.length)];
+      oscillator.frequency.linearRampToValueAtTime(Math.random() * 40, audioCtx.currentTime);
+      oscillator.frequency.linearRampToValueAtTime(Math.random() * 40, audioCtx.currentTime + Math.random());
+    }
+    if(Math.random() < 0.5){
+    oscillator2.type = wTypes[Math.floor(Math.random() * wTypes.length)];
+    oscillator2.frequency.linearRampToValueAtTime(Math.random() * 200, audioCtx.currentTime);
+    oscillator2.frequency.linearRampToValueAtTime(Math.random() * 200, audioCtx.currentTime + Math.random());
+    }
   }
 
   this.update = ()=>
@@ -186,7 +202,6 @@ mixer.connect(audioCtx.destination);
 
     if(Math.random() < 0.15)
     {
-
 
       if(Math.random() < 0.01){
         randomiseFilter(false);
@@ -229,7 +244,7 @@ mixer.connect(audioCtx.destination);
         noise.source = blur;
       }
 
-      if(Math.random() < 0.02){
+      if(Math.random() < 0.1){
         randomiseFilter();
         blur.amount = Math.random() * 0.2;
         noise.source = ascii;
@@ -241,8 +256,10 @@ mixer.connect(audioCtx.destination);
 
       if(Math.random() < 0.01){
         filter.Q.value = Math.random() * 10;
+        filter2.Q.value = Math.random() * 10;
         distortion.curve = makeDistortionCurve(Math.random() * 600);
         filter.type = fTypes[Math.floor(Math.random())];
+        filter2.type = fTypes[Math.floor(Math.random())];
         noise.distortion = Math.random() * 5;
         blur.amount = Math.random() * 0.1;
         text.scaleX = text.scaleY = Math.random() * 2;
@@ -250,9 +267,10 @@ mixer.connect(audioCtx.destination);
       }
 
   } else {
-    if(Math.random() < 0.2){
+    if(Math.random() < 0.4){
       gainNode.gain.value = 0;
     }
+    filter.frequency.value = Math.random() * 4000;
     if(Math.random() < 0.05){
       noise.distortion = Math.random() * 0.01;
       blur.amount = Math.random() * 0.01;
