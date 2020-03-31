@@ -2,14 +2,11 @@ function IndexCanvasController(stage)
 {
 
   let audioStarted = false;
-  // create web audio api context
   var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
-  // create Oscillator node
   var oscillator = audioCtx.createOscillator();
   oscillator.type = 'triangle';
-  oscillator.frequency.setValueAtTime(7, audioCtx.currentTime); // value in hertz
-
+  oscillator.frequency.setValueAtTime(50, audioCtx.currentTime); // value in hertz
   var distortion = audioCtx.createWaveShaper();
 
   function makeDistortionCurve(amount) {
@@ -31,20 +28,21 @@ distortion.oversample = '4x';
 
 let filter = audioCtx.createBiquadFilter();
 filter.frequency.value = 0;
-filter.type = 'lowshelf';
+// filter.Q.value = 1000;
 
 let gainNode = audioCtx.createGain();
 let mixer = audioCtx.createChannelMerger();
 
 let fTypes = ['highpass', 'bandpass', 'lowpass', 'peaking', 'notch', 'allpass', 'highshelf', 'lowshelf'];
 
+let wTypes = ['sine', 'square', 'sawtooth', 'triangle'];
+
 oscillator.connect(filter);
 filter.connect(distortion);
 distortion.connect(gainNode);
-
+gainNode.connect(mixer);
 mixer.connect(audioCtx.destination);
 
-gainNode.connect(mixer);
 
 
 
@@ -53,7 +51,7 @@ gainNode.connect(mixer);
     if(audioStarted)
       return;
     audioStarted = true;
-    filter.frequency.linearRampToValueAtTime(40, audioCtx.currentTime + 10);
+    filter.frequency.linearRampToValueAtTime(40, audioCtx.currentTime + 5);
     oscillator.start();
 
   });
@@ -67,8 +65,8 @@ gainNode.connect(mixer);
         LEG_VEL_FRIC = 1.0003,
         LEG_VEL_DIV = 17500,
         LEG_MAX_VEL = 0.2,
-        VIRUS_LIFE_MIN = 1500,
-        VIRUS_LIFE_RANGE = 1500,
+        VIRUS_LIFE_MIN = 200,
+        VIRUS_LIFE_RANGE = 3000,
         CELLS = [],
         VIRUSES = [];
 
@@ -83,7 +81,7 @@ gainNode.connect(mixer);
 
   blur.source = source;
   blur.amount = 0.01;
-  sketch.source = blur;
+  sketch.source = source;
   edge.source = sketch;
   noise.source = edge;
   noise.scanlines = 0.8;
@@ -167,6 +165,18 @@ gainNode.connect(mixer);
   // text2.y = window.innerHeight / 2;
   text2.y = text.y + bounds.height * 1.5;
 
+
+  function randomiseFilter()
+  {
+    gainNode.gain.value = 0.5;
+    filter.frequency.value = Math.random() * 4000;
+    filter.Q.value = Math.random() * 10;
+    distortion.curve = makeDistortionCurve(Math.random() * 1200);
+    filter.type = fTypes[Math.floor(Math.random() * fTypes.length)];
+    oscillator.type = wTypes[Math.floor(Math.random() * wTypes.length)];
+    oscillator.frequency.value = Math.random() * 20;
+  }
+
   this.update = ()=>
   {
 
@@ -189,6 +199,7 @@ gainNode.connect(mixer);
         noise.verticalSync = 0;
 
       if(Math.random() < 0.05){
+        randomiseFilter();
         noise.distortion = Math.random() * 2;
         blur.amount = Math.random() * 0.05;
       }
@@ -204,12 +215,14 @@ gainNode.connect(mixer);
         noise.lineSync = 0;
 
       if(Math.random() < 0.1){
+        randomiseFilter();
         text.scaleX = text.scaleY = 1;
         noise.source = blur;
       }
 
       if(Math.random() < 0.02){
-        blur.amount = Math.random() * 0.05;
+        randomiseFilter();
+        blur.amount = Math.random() * 0.2;
         noise.source = ascii;
         ascii.source = Math.random() < 0.5 ? blur : edge;
       }
@@ -217,12 +230,19 @@ gainNode.connect(mixer);
 
 
       if(Math.random() < 0.01){
+        filter.Q.value = Math.random() * 10;
+        distortion.curve = makeDistortionCurve(Math.random() * 600);
+        filter.type = fTypes[Math.floor(Math.random())];
         noise.distortion = Math.random() * 5;
         blur.amount = Math.random() * 0.1;
         text.scaleX = text.scaleY = Math.random() * 1.3;
         noise.source = edge;
       }
 
+  } else {
+    if(Math.random() < 0.1){
+      gainNode.gain.value = 0;
+    }
   }
 
 
