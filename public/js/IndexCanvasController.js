@@ -166,15 +166,15 @@ mixer.connect(audioCtx.destination);
   text2.y = text.y + bounds.height * 1.5;
 
 
-  function randomiseFilter()
+  function randomiseFilter(turnUp = true)
   {
-    gainNode.gain.value = 0.5;
+    gainNode.gain.value = turnUp ? 0.5 : 0.1;
     filter.frequency.value = Math.random() * 4000;
     filter.Q.value = Math.random() * 10;
     distortion.curve = makeDistortionCurve(Math.random() * 1200);
     filter.type = fTypes[Math.floor(Math.random() * fTypes.length)];
     oscillator.type = wTypes[Math.floor(Math.random() * wTypes.length)];
-    oscillator.frequency.value = Math.random() * 20;
+    oscillator.frequency.value = Math.random() * 30;
   }
 
   this.update = ()=>
@@ -184,17 +184,22 @@ mixer.connect(audioCtx.destination);
     {
 
 
-      if(Math.random() < 0.01)
+      if(Math.random() < 0.01){
+        randomiseFilter(false);
         noise.distortion = Math.random() * 0.2;
+      }
       else
         noise.distortion = 0;
 
 
-      if(Math.random() < 0.01)
+      if(Math.random() < 0.01){
+        randomiseFilter(false);
         noise.distortion = Math.random() * 2;
-
-      if(Math.random() < 0.05)
+      }
+      if(Math.random() < 0.05){
+        randomiseFilter(false);
         noise.verticalSync = Math.random() * 100;
+      }
       else
         noise.verticalSync = 0;
 
