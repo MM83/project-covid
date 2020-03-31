@@ -61,13 +61,13 @@ gainNode.connect(mixer);
 
 
   const NUM_VIRUS_PARTS = 20,
-        NUM_VIRUS_LEGS = 6,
+        NUM_VIRUS_LEGS = 8,
         NUM_CELL_PARTS = 20,
         VIRUS_RADIUS_DIVISOR = 120,
         LEG_VEL_FRIC = 1.0003,
         LEG_VEL_DIV = 17500,
         LEG_MAX_VEL = 0.2,
-        VIRUS_LIFE_MIN = 1000,
+        VIRUS_LIFE_MIN = 1500,
         VIRUS_LIFE_RANGE = 1500,
         CELLS = [],
         VIRUSES = [];
@@ -211,7 +211,10 @@ gainNode.connect(mixer);
       if(Math.random() < 0.02){
         blur.amount = Math.random() * 0.05;
         noise.source = ascii;
+        ascii.source = Math.random() < 0.5 ? blur : edge;
       }
+
+
 
       if(Math.random() < 0.01){
         noise.distortion = Math.random() * 5;
