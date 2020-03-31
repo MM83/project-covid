@@ -79,19 +79,13 @@ gainNode.connect(mixer);
   let edge = seriously.effect('edge');
   let blur = seriously.effect('blur');
   let sketch = seriously.effect('sketch');
-  let ascii = seriously.effect('ascii');
 
   blur.source = source;
-  blur.amount = 0.01;
-  sketch.source = blur;
-  edge.source = sketch;
+  edge.source = blur;
   noise.source = edge;
-  noise.scanlines = 0.8;
-  noise.distortion = 0;
-  ascii.source = blur;
-  target.source = noise;;
-
-  // noise.scanlines =  50;
+  target.source = noise;
+  noise.scanlines =  50;
+  console.log("noiso", noise);
 
   // console.log("fg", filmgrain);
 
@@ -170,62 +164,92 @@ gainNode.connect(mixer);
   this.update = ()=>
   {
 
-    if(Math.random() < 0.25)
+
+    // gainNode.value = 0.0;
+    //
+    if(Math.random() < 0.05)
     {
+      noise.distortion = 0;
+      noise.lineSync = 0;
+      noise.verticalSync =  0;
+      text.scaleX = text.scaleY = 1;
+      // noise.source = blur;
+    }
+    if(Math.random() < 0.5)
+    {
+        // noise.distortion = Math.random() * 0.02;
+        // noise.lineSync =  Math.random() * 0.02;
+        // noise.verticalSync =  Math.random() * 10;
+    }
+    if(Math.random() < 0.1)
+    {
+        blur.amount = Math.random() * 10;
+    }
+    if(Math.random() < 0.5)
+    {
+    }
+
+    //
+    //
+    // if(Math.random() < 0.005)
+    // {
 
 
-      if(Math.random() < 0.01)
-        noise.distortion = Math.random() * 0.2;
-      else
-        noise.distortion = 0;
+    //   noise.scanlines =  Math.random() * 200;
+    //   oscillator.type = 'square';
+    //   gainNode.gain.value = 0.2;
+    // }
+    // if(Math.random() < 0.001)
+    // {
+    //   noise.lineSync = 0;
+    //   blur.amount = Math.random() * 0.01;
+    //   oscillator.type = 'square';
+    // }
+    // if(Math.random() < 0.001)
+    // {
+    //   blur.amount = Math.random() * 0.02;
+    //   noise.lineSync = Math.random() * 0.2;
+    //   filter.frequency.value = Math.random() * 4000;
+    //   filter.Q.value = Math.random() * 10;
+    //   oscillator.type = 'sawtooth';
+    //   oscillator.frequency.value = 40 + Math.random() * 40;
+    //   gainNode.gain.value = 0.5;
+    // }
+
+    // if(Math.random() < 0.1)
+    // {
+    //   gainNode.gain.value = 0;
+    // }
+    //
 
 
-      if(Math.random() < 0.01)
-        noise.distortion = Math.random() * 2;
-
-      if(Math.random() < 0.05)
-        noise.verticalSync = Math.random() * 100;
-      else
-        noise.verticalSync = 0;
-
-      if(Math.random() < 0.05){
-        noise.distortion = Math.random() * 2;
-        blur.amount = Math.random() * 0.05;
-      }
-
-      if(Math.random() < 0.2)
-        blur.amount = 0;
-
-      if(Math.random() < 0.01)
-        noise.lineSync = Math.random() * 0.1;
-      else if(Math.random() < 0.002)
-        noise.lineSync = Math.random() * 0.3;
-      else
-        noise.lineSync = 0;
-
-      if(Math.random() < 0.1){
-        text.scaleX = text.scaleY = 1;
-        noise.source = blur;
-      }
-
-      if(Math.random() < 0.02){
-        blur.amount = Math.random() * 0.05;
-        noise.source = ascii;
-      }
-
-      if(Math.random() < 0.01){
-        noise.distortion = Math.random() * 5;
-        blur.amount = Math.random() * 0.1;
-        text.scaleX = text.scaleY = Math.random() * 1.3;
-        noise.source = edge;
-      }
-
-  }
+    // if(Math.random() < 0.005)
+    // {
+    //
+    //   noise.distortion = Math.random() * 0.3;
+    //   text.scaleX = text.scaleY = Math.random() * 2;
+    //   noise.lineSync = Math.random() * 0.2;
+    //   noise.source = edge;
+    //   oscillator.frequency.value = 40 + Math.random() * 40;
+    //   noise.verticalSync = Math.random() * 200;
+    //   gainNode.gain.value = 0.5;
+    //   filter.Q.value = Math.random() * 10;
+    //   distortion.curve = makeDistortionCurve(Math.random() * 600);
+    //   filter.type = fTypes[Math.floor(Math.random())];
+    // }
+    // if(Math.random() < 0.005)
+    // {
+    //   noise.distortion = Math.random() * 0.3;
+    //   filter.Q.value = Math.random() * 10;
+    //   distortion.curve = makeDistortionCurve(Math.random() * 600);
+    //   filter.type = fTypes[Math.floor(Math.random())];
+    //   oscillator.frequency.value = 40 + Math.random() * 40;
+    //   filter.frequency.linearRampToValueAtTime(Math.random() * 4000, audioCtx.currentTime + 1);
+    //   gainNode.gain.value = 0.5;
+    // }
 
 
-
-
-
+    // noise.amount = Math.random();
 
     let r = Math.min(window.innerWidth, window.innerHeight) / VIRUS_RADIUS_DIVISOR;
 
