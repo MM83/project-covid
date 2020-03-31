@@ -65,8 +65,8 @@ mixer.connect(audioCtx.destination);
         LEG_VEL_FRIC = 1.0003,
         LEG_VEL_DIV = 17500,
         LEG_MAX_VEL = 0.2,
-        VIRUS_LIFE_MIN = 200,
-        VIRUS_LIFE_RANGE = 3000,
+        VIRUS_LIFE_MIN = 500,
+        VIRUS_LIFE_RANGE = 1000,
         CELLS = [],
         VIRUSES = [];
 
