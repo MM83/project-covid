@@ -185,7 +185,7 @@ gainNode.connect(mixer);
     {
       noise.distortion = Math.random() * 0.02;
       gainNode.value = 0.2;
-      noise.verticalSync =  Math.random() * 20;
+      noise.verticalSync =  Math.random();
       blur.amount = Math.random() * 0.03;
       noise.scanlines =  Math.random() * 200;
       oscillator.type = 'square';
@@ -204,35 +204,38 @@ gainNode.connect(mixer);
       filter.frequency.value = Math.random() * 4000;
       filter.Q.value = Math.random() * 10;
       oscillator.type = 'sawtooth';
-      // gainNode.gain.value = 0.5;
+      oscillator.frequency.value = 40 + Math.random() * 40;
+      gainNode.gain.value = 0.5;
     }
 
-    if(Math.random() < 0.2)
+    if(Math.random() < 0.1)
     {
       gainNode.gain.value = 0;
     }
 
 
 
-    if(Math.random() < 0.02)
+    if(Math.random() < 0.005)
     {
 
       noise.distortion = Math.random() * 0.3;
       text.scaleX = text.scaleY = Math.random() * 2;
       noise.lineSync = Math.random() * 0.2;
       noise.source = edge;
-      oscillator.frequency.value = Math.random() * 80;
+      oscillator.frequency.value = 40 + Math.random() * 40;
       noise.verticalSync = Math.random() * 200;
       gainNode.gain.value = 0.5;
+      filter.Q.value = Math.random() * 10;
       distortion.curve = makeDistortionCurve(Math.random() * 600);
+      filter.type = fTypes[Math.floor(Math.random())];
     }
-    if(Math.random() < 0.02)
+    if(Math.random() < 0.005)
     {
       noise.distortion = Math.random() * 0.3;
       filter.Q.value = Math.random() * 10;
       distortion.curve = makeDistortionCurve(Math.random() * 600);
       filter.type = fTypes[Math.floor(Math.random())];
-      oscillator.frequency.value = Math.random() * 80;
+      oscillator.frequency.value = 40 + Math.random() * 40;
       filter.frequency.linearRampToValueAtTime(Math.random() * 4000, audioCtx.currentTime + 1);
       gainNode.gain.value = 0.5;
     }
