@@ -275,7 +275,7 @@ mixer.connect(audioCtx.destination);
       noise.source = blur;
     }
   }
-  if(Math.random() < 0.75){
+  if(Math.random() < 0.1){
     gainNode.gain.value = 0;
     oscillator.frequency.value = 4;
     oscillator2.frequency.value = 5;
