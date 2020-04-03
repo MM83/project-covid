@@ -33,6 +33,10 @@ let filter2 = audioCtx.createBiquadFilter();
 filter2.frequency.value = 0;
 // filter.Q.value = 1000;
 
+let masterFilter = audioCtx.createBiquadFilter();
+masterFilter.type = "highpass";
+masterFilter.frequency.value = 3000;
+
 let gainNode = audioCtx.createGain();
 let mixer = audioCtx.createChannelMerger();
 
@@ -47,7 +51,8 @@ filter2.connect(mixer);
 mixer.connect(distortion);
 distortion.connect(gainNode);
 gainNode.connect(mixer);
-mixer.connect(audioCtx.destination);
+mixer.connect(masterFilter);
+masterFilter.connect(audioCtx.destination);
 
 
 
@@ -175,7 +180,7 @@ mixer.connect(audioCtx.destination);
 
   function randomiseFilter(turnUp = true)
   {
-    gainNode.gain.value = turnUp ? 0.5 : gainNode.gain.value ;
+    gainNode.gain.value = turnUp ? Math.random() * 0.5 : gainNode.gain.value ;
     // filter.frequency.value = Math.random() * 4000;
 
     filter.frequency.linearRampToValueAtTime(Math.random() * 4000, audioCtx.currentTime + Math.random());
@@ -187,20 +192,20 @@ mixer.connect(audioCtx.destination);
     filter2.type = fTypes[Math.floor(Math.random() * fTypes.length)];
     if(Math.random() < 0.5){
       oscillator.type = wTypes[Math.floor(Math.random() * wTypes.length)];
-      oscillator.frequency.linearRampToValueAtTime(Math.random() * 40, audioCtx.currentTime);
-      oscillator.frequency.linearRampToValueAtTime(Math.random() * 400, audioCtx.currentTime + Math.random());
+      oscillator.frequency.linearRampToValueAtTime(1000 + Math.random() * 200, audioCtx.currentTime);
+      oscillator.frequency.linearRampToValueAtTime(40 + Math.random() * 200, audioCtx.currentTime + Math.random());
     }
     if(Math.random() < 0.5){
     oscillator2.type = wTypes[Math.floor(Math.random() * wTypes.length)];
-    oscillator2.frequency.linearRampToValueAtTime(Math.random() * 400, audioCtx.currentTime);
-    oscillator2.frequency.linearRampToValueAtTime(Math.random() * 40, audioCtx.currentTime + Math.random());
+    oscillator2.frequency.linearRampToValueAtTime(1000 + Math.random() * 200, audioCtx.currentTime);
+    oscillator2.frequency.linearRampToValueAtTime(40 + Math.random() * 200, audioCtx.currentTime + Math.random());
     }
   }
 
   this.update = ()=>
   {
 
-    if(Math.random() < 0.15)
+    if(Math.random() < 0.1)
     {
 
       if(Math.random() < 0.01){
@@ -275,7 +280,7 @@ mixer.connect(audioCtx.destination);
       noise.source = blur;
     }
   }
-  if(Math.random() < 0.25){
+  if(Math.random() < 0.9){
     gainNode.gain.value = 0;
     oscillator.frequency.value = 4;
     oscillator2.frequency.value = 5;
