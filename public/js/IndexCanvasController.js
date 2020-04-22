@@ -34,8 +34,8 @@ filter2.frequency.value = 0;
 // filter.Q.value = 1000;
 
 let masterFilter = audioCtx.createBiquadFilter();
-masterFilter.type = "highpass";
-masterFilter.frequency.value = 3000;
+masterFilter.type = "highshelf";
+masterFilter.frequency.value = 500;
 
 let gainNode = audioCtx.createGain();
 let mixer = audioCtx.createChannelMerger();
@@ -180,7 +180,7 @@ masterFilter.connect(audioCtx.destination);
 
   function randomiseFilter(turnUp = true)
   {
-    gainNode.gain.value = turnUp ? Math.random() * 0.5 : gainNode.gain.value ;
+    gainNode.gain.value = turnUp ? Math.random() * 0.5 : 0 ;
     // filter.frequency.value = Math.random() * 4000;
 
     filter.frequency.linearRampToValueAtTime(Math.random() * 4000, audioCtx.currentTime + Math.random());
@@ -192,20 +192,22 @@ masterFilter.connect(audioCtx.destination);
     filter2.type = fTypes[Math.floor(Math.random() * fTypes.length)];
     if(Math.random() < 0.5){
       oscillator.type = wTypes[Math.floor(Math.random() * wTypes.length)];
-      oscillator.frequency.linearRampToValueAtTime(1000 + Math.random() * 200, audioCtx.currentTime);
-      oscillator.frequency.linearRampToValueAtTime(40 + Math.random() * 200, audioCtx.currentTime + Math.random());
+      oscillator.frequency.linearRampToValueAtTime(10 * Math.ceil(Math.random()*5), audioCtx.currentTime);
+      oscillator.frequency.linearRampToValueAtTime(10 * Math.ceil(Math.random()*5), audioCtx.currentTime + Math.random());
     }
     if(Math.random() < 0.5){
     oscillator2.type = wTypes[Math.floor(Math.random() * wTypes.length)];
-    oscillator2.frequency.linearRampToValueAtTime(1000 + Math.random() * 200, audioCtx.currentTime);
-    oscillator2.frequency.linearRampToValueAtTime(40 + Math.random() * 200, audioCtx.currentTime + Math.random());
+    oscillator2.frequency.linearRampToValueAtTime(10 * Math.ceil(Math.random()*5), audioCtx.currentTime);
+    oscillator2.frequency.linearRampToValueAtTime(10 * Math.ceil(Math.random()*5), audioCtx.currentTime + Math.random());
     }
   }
 
   this.update = ()=>
   {
 
-    if(Math.random() < 0.1)
+    gainNode.gain.value = 0;
+
+    if(Math.random() < 0.2)
     {
 
       if(Math.random() < 0.01){
@@ -282,8 +284,8 @@ masterFilter.connect(audioCtx.destination);
   }
   if(Math.random() < 0.9){
     gainNode.gain.value = 0;
-    oscillator.frequency.value = 4;
-    oscillator2.frequency.value = 5;
+    // oscillator.frequency.value = 4;
+    // oscillator2.frequency.value = 5;
   }
 
 
