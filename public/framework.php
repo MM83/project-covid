@@ -1,5 +1,10 @@
 <?php
 
+
+
+  $url_code = end(explode("/", "//{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}"));
+  srand($url_code);
+
   $title_prefix_array =  array(
     "Spastic", "Awesome", "Wank", "Shit", "Crap", "Balls",
     "Mong", "Div", "Idiot", "Pointless", "Rubbish", "Bollocks",
@@ -117,6 +122,7 @@
       font-size: 1rem;
       border-radius: 0.25rem;
       cursor: pointer;
+      margin-top: 2rem;
     }
 
     .main-screen {
@@ -166,6 +172,7 @@
     <div class="main-screen">
 
       <h1><?php echo $title; ?></h1>
+      <!-- <h1><?php echo $title; ?></h1> -->
 
 
       <h4><?php echo $subtitle; ?></h4>
@@ -213,11 +220,18 @@
         </div>
       </div>
 
+      <button onclick="regen()">Regenerate</button>
+
     </div>
 
 
     <script type="text/javascript" >
-
+      function regen()
+      {
+        let split = window.location.href.split("/");
+        split.splice(split.length - 1, 1);
+        window.location.href = split.join("/") + "/" + Math.round(Math.random()*999999999);
+      }
     </script>
   </body>
 </html>
