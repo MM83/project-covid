@@ -7,8 +7,8 @@
 
   $title_prefix_array =  array(
     "Spastic", "Awesome", "Wank", "Shit", "Crap", "Balls",
-    "Mong", "Div", "Idiot", "Pointless", "Rubbish", "Bollocks",
-    "Awful", "Redundant", "Excess"
+    "Ballbag", "Idiot", "Pointless", "Rubbish", "Bollocks",
+    "Awful", "Redundant", "Excess", "Stupid", "Moron"
   );
   $title_prefix_count = count($title_prefix_array);
   $title_prefix_index = rand(0, $title_prefix_count - 1);
@@ -47,6 +47,7 @@
     "Utterly Redundant", "Expressive",
     "Agnostic", "Polymorphic", "Multi-Paradigm",
     "Plugin-Oriented", "Does Nothing",
+    "Ninja-approved", "Lean",
     "Powerful", "Battle-hardened", "Field-tested"
   );
   $subheadings_count = count($subheadings);
@@ -142,18 +143,22 @@
       case 3:
         return "Makes dependency-checking a breeze: it'll never have any, it'll never be one.";
       case 4:
-        return "A modular, container-oriented philosophy, from install to uninstall";
+        return "A modular, container-oriented philosophy, from install to uninstall.";
       case 5:
         return "Weighing in at just " . rand(1, 20) . " bytes, it's literally useless.";
       case 6:
         return "Works well alongside all your favourite flavour-of-the-month frameworks.";
       case 7:
         return "Dependency-injection is a cinch, letting you design " . get_superlative() . " modular patterns.";
+      case 8:
+        return "Your team will hate being forced to adopt this just as much as you will.";
+      case 9:
+        return "Skill-agnostic: novices and rockstars alike will question the necessity of this.";
 
     }
   }
 
-  $n_return_phrases = 7;
+  $n_return_phrases = 9;
 
   $numbers = range(0, $n_return_phrases);
   shuffle($numbers);
@@ -265,7 +270,7 @@
 
     @media (orientation: portrait) {
       body {
-        /* font-size: 2vh; */
+        /* font-size: 50px; */
       }
       .three-columns {
         flex-direction: column;
