@@ -81,16 +81,15 @@
 
   $col_pairs = array(
     array("#222222", "#ffffff", "#666666", "#ff9900"),
-    array("#ffffff", "#222222", "#666666", "#0099ff"),
-    array("#fe43fd", "#2288aa", "#666666", "#ff33aa"),
-    array("#aa8822", "#28a284", "#666666", "#aaff33"),
-    array("#3dff67", "#fe43fd", "#666666", "#99aa55"),
-    array("#2288aa", "#21055a", "#666666", "#ffbbaa")
+    array("#6ec5ff", "#222222", "#205375",  "#eeeeee"),
+    array("#faec35", "#2288aa", "#2288aa", "#faec35")
   );
 
   $col_index = rand(0, count($col_pairs) - 1);
 
   $base_col_pair = $col_pairs[$col_index];
+
+
 
   $bg = $base_col_pair[0];
   $fg = $base_col_pair[1];
@@ -98,22 +97,37 @@
   $bg1 = $base_col_pair[2];
   $fg2 = $base_col_pair[3];
 
-  $n_return_phrases = 6;
+  if(rand(0, 10) < 5)
+  {
+    //Swap sets
+    $bg = $base_col_pair[2];
+    $fg = $base_col_pair[3];
+    $bg1 = $base_col_pair[0];
+    $fg2 = $base_col_pair[1];
+  }
 
-  $numbers = range(0, $n_return_phrases - 1);
-  shuffle($numbers);
+  if(rand(0, 10) < 5)
+  {
+    //Swap p and s
+    $bg = $base_col_pair[1];
+    $fg = $base_col_pair[0];
+    $bg1 = $base_col_pair[3];
+    $fg2 = $base_col_pair[2];
+  }
+
 
   $superlatives = array(
     "awesome", "janky", "blazing-fast", "expressive", "mediocre", "redundant"
   );
 
+
   function get_superlative()
   {
-    $result = $superlatives[0];
-    return $result;
-    // return
-    // return $superlatives[rand(0, count($superlatives) - 1)];
+    global $superlatives;
+    return $superlatives[rand(0, count($superlatives) - 1)];
   }
+
+
 
   function return_phrase($index)
   {
@@ -124,16 +138,25 @@
       case 1:
         return "It can't do much wrong if it doesn't do much at all.";
       case 2:
-        return "It's a doddle to integrate, with our fire-and-forget approach: Simply import, then ignore!";
+        return "It's a doddle to integrate, with an import-then-ignore philosophy.";
       case 3:
         return "Makes dependency-checking a breeze: it'll never have any, it'll never be one.";
       case 4:
-        return "A modular architecture means that everything is organised and where you left it.";
+        return "A modular, container-oriented philosophy, from install to uninstall";
       case 5:
         return "Weighing in at just " . rand(1, 20) . " bytes, it's literally useless.";
+      case 6:
+        return "Works well alongside all your favourite flavour-of-the-month frameworks.";
+      case 7:
+        return "Dependency-injection is a cinch, letting you design " . get_superlative() . " modular patterns.";
 
     }
   }
+
+  $n_return_phrases = 7;
+
+  $numbers = range(0, $n_return_phrases);
+  shuffle($numbers);
 
   $phrases = array(
     return_phrase($numbers[0]),
@@ -153,6 +176,8 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
+    <meta property="og:title" content="<?php echo $title; ?>">
+    <meta property="og:image" content="icon.jpg">
     <title><?php echo $title; ?></title>
     <style>
 
@@ -173,7 +198,13 @@
       box-sizing: border-box;
     }
 
-    h4 {
+    h1 {
+      margin: 2rem;
+      margin-bottom: 0.5rem;
+      font-size: 3rem;
+    }
+
+    h2 {
       font-weight: 100;
     }
 
@@ -219,9 +250,10 @@
       flex-direction: column;
     }
 
-    .column > h2 {
+    .column > h3 {
       font-size: 1.5rem;
       font-weight: 500;
+      margin: 1rem;
       text-align: center;
     }
 
@@ -232,6 +264,9 @@
     }
 
     @media (orientation: portrait) {
+      body {
+        /* font-size: 2vh; */
+      }
       .three-columns {
         flex-direction: column;
         min-height: auto;
@@ -250,22 +285,22 @@
       <!-- <h1><?php echo $title; ?></h1> -->
 
 
-      <h4><?php echo $subtitle; ?></h4>
+      <h2><?php echo $subtitle; ?></h2>
       <div class="three-columns">
         <div class="column">
-          <h2><?php echo $subheadings[0]; ?></h2>
+          <h3><?php echo $subheadings[0]; ?></h3>
           <section>
             <?php echo $phrases[0]; ?>
           </section>
         </div>
         <div class="column">
-          <h2><?php echo $subheadings[1]; ?></h2>
+          <h3><?php echo $subheadings[1]; ?></h3>
           <section>
             <?php echo $phrases[1]; ?>
           </section>
         </div>
         <div class="column">
-          <h2><?php echo $subheadings[2]; ?></h2>
+          <h3><?php echo $subheadings[2]; ?></h3>
           <section>
             <?php echo $phrases[2]; ?>
           </section>
@@ -273,22 +308,22 @@
       </div>
 
 
-      <h4>Unlock the awesome</h4>
+      <h4>Unlock the <?php echo get_superlative(); ?></h4>
       <div class="three-columns">
         <div class="column">
-          <h2><?php echo $subheadings[3]; ?></h2>
+          <h3><?php echo $subheadings[3]; ?></h3>
           <section>
             <?php echo $phrases[3]; ?>
           </section>
         </div>
         <div class="column">
-          <h2><?php echo $subheadings[4]; ?></h2>
+          <h3><?php echo $subheadings[4]; ?></h3>
           <section>
             <?php echo $phrases[4]; ?>
           </section>
         </div>
         <div class="column">
-          <h2><?php echo $subheadings[5]; ?></h2>
+          <h3><?php echo $subheadings[5]; ?></h3>
           <section>
             <?php echo $phrases[5]; ?>
           </section>
